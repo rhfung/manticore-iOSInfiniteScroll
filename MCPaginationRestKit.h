@@ -13,6 +13,8 @@
 
 @interface MCPaginationHelper(RestKit)
 
--(void)setupMapping:(RKObjectManager*)manager;
++(void)setupMapping:(RKObjectManager*)manager;
+
++(id)firstObjectWithoutMetaBlock:(NSArray*)restKitArray;
 
 @end

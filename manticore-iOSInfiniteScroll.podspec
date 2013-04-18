@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
-  s.name         = "Manticore-iOSInfiniteScroll"
-  s.version      = "0.0.5"
-  s.summary      = "Manticore-iOSInfiniteScroll provides infinite scrolling for UITableView and supports TastyPie pagnination coupled with RestKit."
+  s.name         = "manticore-iOSInfiniteScroll"
+  s.version      = "0.0.1"
+  s.summary      = "manticore-iOSInfiniteScroll provides infinite scrolling for UITableView and supports TastyPie pagnination coupled with RestKit."
   s.description  = <<-DESC
           Manticore-iOSInfiniteScroll provides infinite scrolling for UITableView and supports TastyPie pagnination coupled with RestKit.
           DESC
@@ -13,4 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = '*.{h,m}'
   s.requires_arc = true
   s.dependency 'RestKit', '~> 0.20'
+  s.dependency 'AFNetworking-TastyPie', '~> 0.0.2'
+  s.dependency 'SVPullToRefresh', '~> 0.4.1'
+  s.dependency 'Manticore-iOSViewFactory', '~> 0.0.5'
 end

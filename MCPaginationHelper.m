@@ -7,15 +7,14 @@
 //
 
 #import "MCPaginationHelper.h"
-#import "AFNetworking+ApiKeyAuthentication.h"
-#import "UIScrollView+SVInfiniteScrolling.h"
+#import <AFNetworking-TastyPie/AFNetworking+ApiKeyAuthentication.h>
+#import <SVPullToRefresh/UIScrollView+SVInfiniteScrolling.h>
 #import <RestKit/RestKit.h>
-#import "AppModel.h"
-#import "MCViewModel.h"
+#import <Manticore-iOSViewFactory/ManticoreViewFactory.h>
 
 @interface MCPaginationHelper(Extension)
 
--(void)setMeta:(Meta*)newMeta;
+-(void)setMeta:(MCMeta*)newMeta;
 -(void)setObjects:(NSMutableArray*)array;
 
 @end
@@ -25,22 +24,27 @@
 @synthesize meta = _meta;
 @synthesize objects = _objects;
 
-+(MCPaginationHelper*)helper{
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix {
   MCPaginationHelper* obj = [MCPaginationHelper new];
-  obj.meta = [Meta new];
+  obj.meta = [MCMeta new];
   obj.objects = [NSMutableArray array];
+  
+  obj->m_username = username;
+  obj->m_apikey = apiKey;
+  obj->m_urlPrefix = urlPrefix;
+  
   return obj;
 }
 
-+(MCPaginationHelper*)helperWithRestKitArray:(NSArray*)array  {
-  MCPaginationHelper* obj = [MCPaginationHelper new];
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array   {
+  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:username apikey:apiKey urlPrefix:urlPrefix];
   [obj loadRestKitArray:array andTableView:nil infiniteScroll:NO];
   return obj;
 }
 
 
-+(MCPaginationHelper*)helperWithRestKitArray:(NSArray*)array andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll {
-  MCPaginationHelper* obj = [MCPaginationHelper new ];
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll {
+  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:username apikey:apiKey urlPrefix:urlPrefix];
   [obj loadRestKitArray:array andTableView:tableView infiniteScroll:infiniteScroll];
   return obj;
 }
@@ -65,8 +69,8 @@
     
     if (sample == nil){
       // remove null
-    }else if ([sample isKindOfClass:[Meta class]]){
-      _meta = (Meta*) sample;
+    }else if ([sample isKindOfClass:[MCMeta class]]){
+      _meta = (MCMeta*) sample;
     }else{
       [newArray addObject:sample];
     }
@@ -116,11 +120,11 @@
   
   // set up RestKit 0.20
   RKObjectManager* sharedMgr = [ RKObjectManager sharedManager];
-  [sharedMgr.HTTPClient setAuthorizationHeaderWithTastyPieUsername:[AppModel sharedModel].user.username andToken:[AppModel sharedModel].apikey];
+  [sharedMgr.HTTPClient setAuthorizationHeaderWithTastyPieUsername:m_username andToken:m_apikey];
   
   // this line should remove the api/ prefix from the URLs returned from the server
-  NSAssert([[_meta.next substringToIndex:API_PREFIX.length] isEqualToString:API_PREFIX], @"All URLs returned from the server should be prefixed by API_URL");
-  NSString* modURL = [_meta.next substringFromIndex:API_PREFIX.length];
+  NSAssert([[_meta.next substringToIndex:m_apikey.length] isEqualToString:m_apikey], @"All URLs returned from the server should be prefixed by API_URL");
+  NSString* modURL = [_meta.next substringFromIndex:m_apikey.length];
   if ([modURL characterAtIndex:0] == '/'){ // auto remove the path prefix (/)
     modURL = [modURL substringFromIndex:1];
   }
@@ -135,10 +139,10 @@
     // filter out the Meta object from the result list and add to the meta property
     for (int i = 0; i < mappingResult.array.count; i++){
       NSObject* sample = [mappingResult.array objectAtIndex:i];
-      if (sample && ![sample isKindOfClass:[Meta class]]){
+      if (sample && ![sample isKindOfClass:[MCMeta class]]){
         [newArray addObject:sample];
-      }else if ([sample isKindOfClass:[Meta class]]){
-        self.meta = (Meta*)sample;
+      }else if ([sample isKindOfClass:[MCMeta class]]){
+        self.meta = (MCMeta*)sample;
       }
     }
     
@@ -157,12 +161,8 @@
           tableView.showsInfiniteScrolling = YES;
         }
       });
-      
-    
     }
-    
-    
-    
+   
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
     isLoading = NO;
     [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.description];

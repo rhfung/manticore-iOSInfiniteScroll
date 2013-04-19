@@ -123,8 +123,8 @@
   [sharedMgr.HTTPClient setAuthorizationHeaderWithTastyPieUsername:m_username andToken:m_apikey];
   
   // this line should remove the api/ prefix from the URLs returned from the server
-  NSAssert([[_meta.next substringToIndex:m_apikey.length] isEqualToString:m_apikey], @"All URLs returned from the server should be prefixed by API_URL");
-  NSString* modURL = [_meta.next substringFromIndex:m_apikey.length];
+  NSAssert([[_meta.next substringToIndex:m_urlPrefix.length] isEqualToString:m_urlPrefix], @"All URLs returned from the server should be prefixed by API_URL");
+  NSString* modURL = [_meta.next substringFromIndex:m_urlPrefix.length];
   if ([modURL characterAtIndex:0] == '/'){ // auto remove the path prefix (/)
     modURL = [modURL substringFromIndex:1];
   }

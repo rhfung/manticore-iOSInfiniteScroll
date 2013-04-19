@@ -12,7 +12,7 @@
 
 @interface MCPaginationHelper : NSObject {
   NSMutableArray* newArray;
-  BOOL isLoading;
+  volatile BOOL isLoading;
   
   NSString* m_username;
   NSString* m_apikey;

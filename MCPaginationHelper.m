@@ -129,10 +129,13 @@
     modURL = [modURL substringFromIndex:1];
   }
   
+//  NSLog(@"Infinite scroll is hitting %@", modURL);
+  
   isLoading = YES;
   
   [sharedMgr getObjectsAtPath:modURL parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
     isLoading = NO;
+    
     // erase the old meta object, we will load another one
     self.meta = nil;
     
@@ -143,21 +146,25 @@
         [newArray addObject:sample];
       }else if ([sample isKindOfClass:[MCMeta class]]){
         self.meta = (MCMeta*)sample;
+//          NSLog(@"Infinite scroll found a new limit %@ and offset %@ and next page `%@`", self.meta.limit, self.meta.offset, self.meta.next);
       }
     }
     
     // assumption: infinite scrolling is already turned on
     if (tableView){
+//      NSLog(@"Infinite scroll stop table animation");
       [tableView.infiniteScrollingView stopAnimating];
       
       dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"Infinite scroll reload data");
         [tableView reloadData];
       
-        if (!self.meta.next){
+        if (!self.meta || !self.meta.next){
+//          NSLog(@"Infinite scroll no more scrolling");
           tableView.showsInfiniteScrolling = NO;
-          
         }
         else{
+//          NSLog(@"Infinite scroll can scroll again");
           tableView.showsInfiniteScrolling = YES;
         }
       });

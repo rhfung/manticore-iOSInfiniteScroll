@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MCMeta.h"
+#import <RestKit/RestKit.h>
 
 @interface MCPaginationHelper : NSObject {
   NSMutableArray* newArray;
@@ -22,8 +23,14 @@
 @property (nonatomic,retain,readonly) MCMeta* meta;
 @property (nonatomic,retain,readonly) NSMutableArray* objects;
 
+// call this method to create an empty helper
++(MCPaginationHelper*)helper;
+
+// call this method to create a helper bound to RestKit
++(MCPaginationHelper*)helperWithRestKit:(RKMappingResult*)mappingResult;
+
 // call this method to create a dummy helper
-+(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix;
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix __attribute__((deprecated));
 
 // call this method when the Meta and objects need separation and there is no GUI
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array ;

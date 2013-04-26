@@ -24,6 +24,32 @@
 @synthesize meta = _meta;
 @synthesize objects = _objects;
 
++(MCPaginationHelper*)helper{
+  MCPaginationHelper* obj = [MCPaginationHelper new];
+  obj.meta = [MCMeta new];
+  obj.objects = [NSMutableArray array];
+  
+  obj->m_username = nil;
+  obj->m_apikey = nil;
+  obj->m_urlPrefix = nil;
+  
+  return obj;
+}
+
++(MCPaginationHelper*)helperWithRestKit:(RKMappingResult*)mappingResult {
+  MCPaginationHelper* obj = [MCPaginationHelper new];
+  obj.meta = [MCMeta new];
+  obj.objects = [NSMutableArray array];
+  
+  obj->m_username = nil;
+  obj->m_apikey = nil;
+  obj->m_urlPrefix = nil;
+  
+  [obj loadRestKitArray:mappingResult.array andTableView:nil infiniteScroll:NO];
+  
+  return obj;
+}
+
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix {
   MCPaginationHelper* obj = [MCPaginationHelper new];
   obj.meta = [MCMeta new];
@@ -81,16 +107,13 @@
   
   // determine if scroll down is needed
   
-  if (scrollView && infiniteScroll){
+  if (scrollView && infiniteScroll) {
     if (_meta && _meta.next){
       scrollView.showsInfiniteScrolling = YES;
       __weak UITableView* weakScrollView = scrollView;
       [scrollView addInfiniteScrollingWithActionHandler:^{
         
         [self loadMoreData:weakScrollView];
-        
-        
-        
       }];
       
     }else{
@@ -117,6 +140,10 @@
   if (!_meta || !_meta.next)
     return;
   
+  // verify that keys are assigned
+  if (!m_username || !m_apikey || !m_urlPrefix){
+    NSAssert(!m_username || !m_apikey || !m_urlPrefix, @"Infinite scroll requires a constructor with username, apikey, and url prefix");
+  }
   
   // set up RestKit 0.20
   RKObjectManager* sharedMgr = [ RKObjectManager sharedManager];

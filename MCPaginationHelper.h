@@ -30,13 +30,18 @@
 +(MCPaginationHelper*)helperWithRestKit:(RKMappingResult*)mappingResult;
 
 // call this method to create a dummy helper
+// internally used to create this object
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix __attribute__((deprecated));
 
 // call this method when the Meta and objects need separation and there is no GUI
-+(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array ;
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array __attribute__((deprecated));
+
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKit:(RKMappingResult*)result;
 
 // call this method when objects have GUI. After creating an object, [tableView reloadData] should be called.
-+(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll;
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll __attribute__((deprecated));
+
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKit:(RKMappingResult*)result andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll;
 
 // call to load more data manually
 -(void)loadMoreData;

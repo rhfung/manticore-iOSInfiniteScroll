@@ -44,20 +44,25 @@ When RestKit returns back a single object, you can extract the single object usi
 When RestKit returns back an array of objects, you can bind a table to an array for infinite scroll. Infinite scroll is provided by [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh) CocoaPod.
 
     ... success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        MCPaginatorHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKitArray:mappingResult.array andTableView:yourTableView infiniteScroll:YES];
+        MCPaginatorHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKit:mappingResult andTableView:yourTableView infiniteScroll:YES];
 
         // ...
     }
 
 `MCPaginatorHelper` can be used without a `UITableView`. A shorter function signature is used:
 
-    [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKitArray:mappingResult.array]
-
-Infinite scroll can be manually invoked by calling:
-
-    MCPaginatorHelper* arr = ...;
+    MCPaginatorHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKit:mappingResult];
     // ...
+    // invoke infinite scroll
     [arr loadMoreData];
+
+Object mapping can be performed without infinite scroll. The following method is called:
+
+        [MCPaginationHelper helperWithRestKit:mappingResult]
+
+A dummy mapping can be called too:
+
+        [MCPaginationHelper helper]
 
 ### Using MCPaginatorHelper
 

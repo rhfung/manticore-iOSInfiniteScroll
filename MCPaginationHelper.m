@@ -50,10 +50,9 @@
   return obj;
 }
 
+// TODO: make this method private
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix {
-  MCPaginationHelper* obj = [MCPaginationHelper new];
-  obj.meta = [MCMeta new];
-  obj.objects = [NSMutableArray array];
+  MCPaginationHelper* obj = [MCPaginationHelper helper];
   
   obj->m_username = username;
   obj->m_apikey = apiKey;
@@ -62,9 +61,22 @@
   return obj;
 }
 
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKit:(RKMappingResult*)result   {
+  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:username apikey:apiKey urlPrefix:urlPrefix];
+  [obj loadRestKitArray:result.array andTableView:nil infiniteScroll:NO];
+  return obj;
+}
+
+
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKitArray:(NSArray*)array   {
   MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:username apikey:apiKey urlPrefix:urlPrefix];
   [obj loadRestKitArray:array andTableView:nil infiniteScroll:NO];
+  return obj;
+}
+
++(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKit:(RKMappingResult*)result andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll {
+  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:username apikey:apiKey urlPrefix:urlPrefix];
+  [obj loadRestKitArray:result.array andTableView:tableView infiniteScroll:infiniteScroll];
   return obj;
 }
 

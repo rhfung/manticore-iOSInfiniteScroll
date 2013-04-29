@@ -199,7 +199,7 @@
    
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
     isLoading = NO;
-    [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.description];
+    [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];
     
     if (tableView){
       tableView.showsInfiniteScrolling = NO;

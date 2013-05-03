@@ -50,7 +50,6 @@
   return obj;
 }
 
-// TODO: make this method private
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix {
   MCPaginationHelper* obj = [MCPaginationHelper helper];
   
@@ -87,6 +86,13 @@
   return obj;
 }
 
++(MCPaginationHelper*)helperWithPaginator:(MCPaginationHelper*)oldPaginator andTableView:(UITableView*)tableView infiniteScroll:(BOOL)scrollSetting {
+  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:oldPaginator->m_username apikey:oldPaginator->m_apikey urlPrefix:oldPaginator->m_apikey];
+  [obj loadMeta:oldPaginator->_meta andObjects:oldPaginator->_objects tableView:tableView infiniteScroll:scrollSetting];
+  
+  return obj;
+}
+
 -(void)setMeta:(MCMeta *)newMeta{
   _meta = newMeta;
 }
@@ -96,26 +102,30 @@
 }
 
 -(void)loadRestKitArray:(NSArray*)array andTableView:(UITableView*)scrollView infiniteScroll:(BOOL)infiniteScroll {
-  
   isLoading = NO;
   // process data from RestKit
   // extract the Meta object from the rest of the objects
   
-  newArray = [NSMutableArray arrayWithCapacity:array.count];
+  MCMeta* newMeta = nil;
+  NSMutableArray* newArray = [NSMutableArray arrayWithCapacity:array.count];
   for (int i = 0; i < array.count; i++){
     NSObject* sample = [array objectAtIndex:i];
     
     if (sample == nil){
       // remove null
     }else if ([sample isKindOfClass:[MCMeta class]]){
-      _meta = (MCMeta*) sample;
+      newMeta = (MCMeta*) sample;
     }else{
       [newArray addObject:sample];
     }
   }
   
-  _objects = newArray;
-  
+  [self loadMeta:newMeta andObjects:newArray tableView:scrollView infiniteScroll:infiniteScroll];
+}
+
+-(void)loadMeta:(MCMeta*)meta andObjects:(NSMutableArray*)objects tableView:(UITableView*)scrollView infiniteScroll:(BOOL)infiniteScroll {
+  _meta = meta;
+  _objects = objects;
   
   // determine if scroll down is needed
   
@@ -182,7 +192,7 @@
     for (int i = 0; i < mappingResult.array.count; i++){
       NSObject* sample = [mappingResult.array objectAtIndex:i];
       if (sample && ![sample isKindOfClass:[MCMeta class]]){
-        [newArray addObject:sample];
+        [_objects addObject:sample];
       }else if ([sample isKindOfClass:[MCMeta class]]){
         self.meta = (MCMeta*)sample;
 //          NSLog(@"Infinite scroll found a new limit %@ and offset %@ and next page `%@`", self.meta.limit, self.meta.offset, self.meta.next);

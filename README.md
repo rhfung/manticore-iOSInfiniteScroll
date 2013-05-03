@@ -8,7 +8,7 @@ Installation
 
 Install using CocoaPods to this repository. Include the following line in `Podfile`:
 
-    pod 'manticore-iOSInfiniteScroll', '~> 0.0.2', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
+    pod 'manticore-iOSInfiniteScroll', '~> 0.0.4', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
 
 Usage
 -----
@@ -41,6 +41,8 @@ When RestKit returns back a single object, you can extract the single object usi
 
 ### Array object responses
 
+#### Infinite Scroll in a UITableView
+
 When RestKit returns back an array of objects, you can bind a table to an array for infinite scroll. Infinite scroll is provided by [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh) CocoaPod.
 
     ... success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
@@ -48,6 +50,8 @@ When RestKit returns back an array of objects, you can bind a table to an array 
 
         // ...
     }
+
+#### Data-Only Parsing
 
 `MCPaginatorHelper` can be used without a `UITableView`. A shorter function signature is used:
 
@@ -60,9 +64,18 @@ Object mapping can be performed without infinite scroll. The following method is
 
         [MCPaginationHelper helperWithRestKit:mappingResult]
 
+#### Dummy Mapping
+
 A dummy mapping can be called too:
 
         [MCPaginationHelper helper]
+
+#### Copying MCPaginatorHelper
+
+You can reuse MCPaginationHelper for other table views. Here's how you would do that:
+    
+        MCPaginationHelper* otherData = [MCPaginationHelper ...];
+        MCPaginationHelper* newData = [MCPaginationHelper helperWithPaginator:otherData andTableView:tableView infiniteScroll:YES];
 
 ### Using MCPaginatorHelper
 
@@ -76,6 +89,6 @@ To Do
 
 This project is a work in progress.
 
-* Decouple authentication from TastyPie apikey
-* Simplify the pagination function by saving username, apikey, and url prefix in a global object.
+* Decouple authentication from TastyPie `apikey`
+* Simplify the pagination function by saving `username`, `apikey`, and url prefix in a global object.
 

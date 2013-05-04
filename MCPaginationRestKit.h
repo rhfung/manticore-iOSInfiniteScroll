@@ -15,6 +15,7 @@
 
 +(void)setupMapping:(RKObjectManager*)manager;
 
-+(id)firstObjectWithoutMetaBlock:(NSArray*)restKitArray;
++(id)firstObjectWithoutMetaBlock:(NSArray*)restKitArray; // deprecated method
++(id)firstObjectFromRestKit:(RKMappingResult*)result;
 
 @end

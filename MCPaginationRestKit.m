@@ -7,6 +7,7 @@
 //
 
 #import "MCPaginationHelper.h"
+#import "MCPaginationRestKit.h"
 #import <RestKit/RestKit.h>
 
 @implementation MCPaginationHelper(RestKit)
@@ -52,6 +53,10 @@
       return [restKitArray objectAtIndex:0];
     }
   }
+}
+
++(id)firstObjectFromRestKit:(RKMappingResult*)result {
+  return [MCPaginationHelper firstObjectWithoutMetaBlock:result.array];
 }
 
 

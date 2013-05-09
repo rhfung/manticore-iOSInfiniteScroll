@@ -84,6 +84,11 @@ You can reuse MCPaginationHelper for other table views. Here's how you would do 
 * `objects`: Objects returned and mapped by RestKit. Manticore Communication (manticom) is the preferred way to create these other mappings, or write RestKit mapping by hand.
 * `meta`: Pagination information provided by TastyPie. `next` is the URL of the next page's resources. `total_count` refers to the total number of available objects and can be used to stop infinite scroll.
 
+Revisions
+---------
+
+0.0.5 - bug fix in `helperWithPaginator:andTableView:infiniteScroll:` to prevent crashes during infinite scroll
+
 To Do
 -----
 

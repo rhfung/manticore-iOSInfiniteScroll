@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface MCMeta : NSObject
+@interface MCMeta : NSObject<NSCopying>
 
 @property(nonatomic, retain) NSString* next;
 @property(nonatomic, retain) NSNumber* total_count;

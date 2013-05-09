@@ -17,4 +17,15 @@
 @synthesize limit;
 @synthesize previous;
 
+-(id)copyWithZone:(NSZone *)zone{
+  MCMeta* m = [[MCMeta allocWithZone:zone] init];
+  m.next = self.next;
+  m.total_count = self.total_count;
+  m.offset = self.offset;
+  m.limit = self.limit;
+  m.previous = self.previous;
+  
+  return m;
+}
+
 @end

@@ -87,8 +87,8 @@
 }
 
 +(MCPaginationHelper*)helperWithPaginator:(MCPaginationHelper*)oldPaginator andTableView:(UITableView*)tableView infiniteScroll:(BOOL)scrollSetting {
-  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:oldPaginator->m_username apikey:oldPaginator->m_apikey urlPrefix:oldPaginator->m_apikey];
-  [obj loadMeta:oldPaginator->_meta andObjects:[NSMutableArray arrayWithArray:oldPaginator->_objects] tableView:tableView infiniteScroll:scrollSetting];
+  MCPaginationHelper* obj = [MCPaginationHelper helperWithUsername:[oldPaginator->m_username copy] apikey:[oldPaginator->m_apikey copy] urlPrefix:[oldPaginator->m_urlPrefix copy]];
+  [obj loadMeta:[oldPaginator->_meta copy] andObjects:[NSMutableArray arrayWithArray:oldPaginator->_objects] tableView:tableView infiniteScroll:scrollSetting];
   
   return obj;
 }
@@ -167,6 +167,9 @@
     NSAssert(!m_username || !m_apikey || !m_urlPrefix, @"Infinite scroll requires a constructor with username, apikey, and url prefix");
   }
   
+  isLoading = YES;
+
+  
   // set up RestKit 0.20
   RKObjectManager* sharedMgr = [ RKObjectManager sharedManager];
   [sharedMgr.HTTPClient setAuthorizationHeaderWithTastyPieUsername:m_username andToken:m_apikey];
@@ -180,11 +183,8 @@
   
 //  NSLog(@"Infinite scroll is hitting %@", modURL);
   
-  isLoading = YES;
   
   [sharedMgr getObjectsAtPath:modURL parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-    isLoading = NO;
-    
     // erase the old meta object, we will load another one
     self.meta = nil;
     
@@ -218,15 +218,20 @@
         }
       });
     }
+    
+    isLoading = NO;
+    
+
    
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-    isLoading = NO;
     [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];
     
     if (tableView){
       tableView.showsInfiniteScrolling = NO;
       [tableView.infiniteScrollingView stopAnimating];
     }
+
+    isLoading = NO;
   }];
   
 }

@@ -19,6 +19,20 @@
 
 @end
 
+// inspired by Brad Larson's solution:
+// http://stackoverflow.com/questions/5662360/gcd-to-perform-task-in-main-thread
+void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
+{
+  if ([NSThread isMainThread])
+  {
+    block();
+  }
+  else
+  {
+    dispatch_sync(dispatch_get_main_queue(), block);
+  }
+}
+
 @implementation MCPaginationHelper
 
 @synthesize meta = _meta;
@@ -182,7 +196,7 @@
   }
   
 //  NSLog(@"Infinite scroll is hitting %@", modURL);
-  
+  UITableView* savedTableView = tableView;
   
   [sharedMgr getObjectsAtPath:modURL parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
     // erase the old meta object, we will load another one
@@ -200,23 +214,20 @@
     }
     
     // assumption: infinite scrolling is already turned on
-    if (tableView){
-//      NSLog(@"Infinite scroll stop table animation");
-      [tableView.infiniteScrollingView stopAnimating];
+    if (savedTableView){
+      [savedTableView.infiniteScrollingView stopAnimating];
       
-      dispatch_async(dispatch_get_main_queue(), ^{
-//        NSLog(@"Infinite scroll reload data");
-        [tableView reloadData];
-      
-        if (!self.meta || !self.meta.next){
-//          NSLog(@"Infinite scroll no more scrolling");
-          tableView.showsInfiniteScrolling = NO;
-        }
-        else{
-//          NSLog(@"Infinite scroll can scroll again");
-          tableView.showsInfiniteScrolling = YES;
-        }
-      });
+      iosinfinitescroll_runOnMainQueueWithoutDeadlocking(
+        ^(void){
+          [savedTableView reloadData];
+
+          if (!self.meta || !self.meta.next){
+            savedTableView.showsInfiniteScrolling = NO;
+          }
+          else{
+            savedTableView.showsInfiniteScrolling = YES;
+          }
+          });
     }
     
     isLoading = NO;
@@ -226,9 +237,9 @@
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
     [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];
     
-    if (tableView){
-      tableView.showsInfiniteScrolling = NO;
-      [tableView.infiniteScrollingView stopAnimating];
+    if (savedTableView){
+      savedTableView.showsInfiniteScrolling = NO;
+      [savedTableView.infiniteScrollingView stopAnimating];
     }
 
     isLoading = NO;

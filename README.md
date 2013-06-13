@@ -8,7 +8,7 @@ Installation
 
 Install using CocoaPods to this repository. Include the following line in `Podfile`:
 
-    pod 'manticore-iOSInfiniteScroll', '~> 0.0.4', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
+    pod 'manticore-iOSInfiniteScroll', '~> 0.0.6', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
 
 Usage
 -----
@@ -86,6 +86,8 @@ You can reuse MCPaginationHelper for other table views. Here's how you would do 
 
 Revisions
 ---------
+
+0.0.6 - possible bug fix to a crash that happens when UITableView gets deallocated on infinite scroll. A local copy of UITableView is saved, and UI updates are made synchronously in the block.
 
 0.0.5 - bug fix in `helperWithPaginator:andTableView:infiniteScroll:` to prevent crashes during infinite scroll
 

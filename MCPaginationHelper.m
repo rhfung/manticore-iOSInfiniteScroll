@@ -37,6 +37,7 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
 
 @synthesize meta = _meta;
 @synthesize objects = _objects;
+@synthesize tableView;
 
 +(MCPaginationHelper*)helper{
   MCPaginationHelper* obj = [MCPaginationHelper new];
@@ -140,16 +141,16 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
 -(void)loadMeta:(MCMeta*)meta andObjects:(NSMutableArray*)objects tableView:(UITableView*)scrollView infiniteScroll:(BOOL)infiniteScroll {
   _meta = meta;
   _objects = objects;
+  tableView = scrollView;
   
   // determine if scroll down is needed
   
   if (scrollView && infiniteScroll) {
     if (_meta && _meta.next){
       scrollView.showsInfiniteScrolling = YES;
-      __weak UITableView* weakScrollView = scrollView;
+      __weak MCPaginationHelper* weakSelf = self;
       [scrollView addInfiniteScrollingWithActionHandler:^{
-        
-        [self loadMoreData:weakScrollView];
+        [weakSelf loadMoreDataFromSelf];
       }];
       
     }else{
@@ -164,10 +165,10 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
 }
 
 -(void)loadMoreData{
-  [self loadMoreData:nil];
+  [self loadMoreDataFromSelf];
 }
 
--(void)loadMoreData:(UITableView*)tableView{
+-(void)loadMoreDataFromSelf{
   // guard against multiple reloads
   if (isLoading)
     return;

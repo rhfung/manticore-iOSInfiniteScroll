@@ -22,6 +22,8 @@
 @property (nonatomic,retain,readonly) MCMeta* meta;
 @property (nonatomic,retain,readonly) NSMutableArray* objects;
 
+@property (weak,nonatomic) UITableView* tableView;
+
 // call this method to create an empty helper
 +(MCPaginationHelper*)helper;
 
@@ -46,8 +48,5 @@
 
 // call to load more data manually
 -(void)loadMoreData;
-
-// call to load more data manually for a table view with infinite scroll
--(void)loadMoreData:(UITableView*)tableView;
 
 @end

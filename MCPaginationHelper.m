@@ -179,7 +179,8 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
   
   // verify that keys are assigned
   if (!m_username || !m_apikey || !m_urlPrefix){
-    NSAssert(!m_username || !m_apikey || !m_urlPrefix, @"Infinite scroll requires a constructor with username, apikey, and url prefix");
+//    NSAssert(m_username && m_apikey && m_urlPrefix, @"Infinite scroll requires a constructor with username, apikey, and url prefix");
+    return;
   }
   
   isLoading = YES;
@@ -197,8 +198,6 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
   }
   
 //  NSLog(@"Infinite scroll is hitting %@", modURL);
-  UITableView* savedTableView = tableView;
-  
   [sharedMgr getObjectsAtPath:modURL parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
     // erase the old meta object, we will load another one
     self.meta = nil;
@@ -215,20 +214,22 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
     }
     
     // assumption: infinite scrolling is already turned on
-    if (savedTableView){
-      [savedTableView.infiniteScrollingView stopAnimating];
+    if (tableView && tableView.superview){
+      [tableView.infiniteScrollingView stopAnimating];
       
       iosinfinitescroll_runOnMainQueueWithoutDeadlocking(
         ^(void){
-          [savedTableView reloadData];
+          if (tableView && tableView.superview){
+            [tableView reloadData];
 
-          if (!self.meta || !self.meta.next){
-            savedTableView.showsInfiniteScrolling = NO;
+            if (!self.meta || !self.meta.next){
+              tableView.showsInfiniteScrolling = NO;
+            }
+            else{
+              tableView.showsInfiniteScrolling = YES;
+            }
           }
-          else{
-            savedTableView.showsInfiniteScrolling = YES;
-          }
-          });
+        });
     }
     
     isLoading = NO;
@@ -238,9 +239,9 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
     [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];
     
-    if (savedTableView){
-      savedTableView.showsInfiniteScrolling = NO;
-      [savedTableView.infiniteScrollingView stopAnimating];
+    if (tableView && tableView.superview){
+      tableView.showsInfiniteScrolling = NO;
+      [tableView.infiniteScrollingView stopAnimating];
     }
 
     isLoading = NO;

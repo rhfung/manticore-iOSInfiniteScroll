@@ -8,7 +8,7 @@ Installation
 
 Install using CocoaPods to this repository. Include the following line in `Podfile`:
 
-    pod 'manticore-iOSInfiniteScroll', '~> 0.0.8', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
+    pod 'manticore-iOSInfiniteScroll', '~> 0.0.9', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
 
 Usage
 -----
@@ -86,6 +86,8 @@ You can reuse MCPaginationHelper for other table views. Here's how you would do 
 
 Revisions
 ---------
+
+0.0.9 - add support for non-authenticated infinite scroll
 
 0.0.8 - continued fixing of crashes from 0.0.6
 

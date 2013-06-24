@@ -30,10 +30,10 @@
 // call this method to create a helper bound to RestKit
 +(MCPaginationHelper*)helperWithRestKit:(RKMappingResult*)mappingResult;
 
-// call this method when the Meta and objects need separation and there is no GUI
+// call this method when the Meta and objects need separation and there is no GUI. username and apiKey can be nil.
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKit:(RKMappingResult*)result;
 
-// call this method when objects have GUI. After creating an object, [tableView reloadData] should be called.
+// call this method when objects have GUI. After creating an object, [tableView reloadData] should be called. username and apiKey can be nil.
 +(MCPaginationHelper*)helperWithUsername:(NSString*)username apikey:(NSString*)apiKey urlPrefix:(NSString*)urlPrefix restKit:(RKMappingResult*)result andTableView:(UITableView*)tableView infiniteScroll:(BOOL)infiniteScroll;
 
 // Call this method to switch the ownership of infinite scroll data from one table to another table.

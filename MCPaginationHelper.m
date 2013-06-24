@@ -178,7 +178,7 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
     return;
   
   // verify that keys are assigned
-  if (!m_username || !m_apikey || !m_urlPrefix){
+  if (!m_urlPrefix){
 //    NSAssert(m_username && m_apikey && m_urlPrefix, @"Infinite scroll requires a constructor with username, apikey, and url prefix");
     return;
   }
@@ -186,9 +186,13 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
   isLoading = YES;
 
   
-  // set up RestKit 0.20
+  // set up RestKit 0.20's authorization if available
   RKObjectManager* sharedMgr = [ RKObjectManager sharedManager];
-  [sharedMgr.HTTPClient setAuthorizationHeaderWithTastyPieUsername:m_username andToken:m_apikey];
+  if (m_username && m_apikey){
+    [sharedMgr.HTTPClient setAuthorizationHeaderWithTastyPieUsername:m_username andToken:m_apikey];
+  }else{
+    [sharedMgr.HTTPClient clearAuthorizationHeader];
+  }
   
   // this line should remove the api/ prefix from the URLs returned from the server
   NSAssert([[_meta.next substringToIndex:m_urlPrefix.length] isEqualToString:m_urlPrefix], @"All URLs returned from the server should be prefixed by API_URL");

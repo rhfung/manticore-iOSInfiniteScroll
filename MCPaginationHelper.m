@@ -38,6 +38,7 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
 @synthesize meta = _meta;
 @synthesize objects = _objects;
 @synthesize tableView;
+@synthesize delegate;
 
 +(MCPaginationHelper*)helper{
   MCPaginationHelper* obj = [MCPaginationHelper new];
@@ -203,11 +204,15 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
     // erase the old meta object, we will load another one
     self.meta = nil;
     
+    // keep a copy of newly added objects
+    NSMutableArray* newObjects = [NSMutableArray arrayWithCapacity:mappingResult.array.count];
+    
     // filter out the Meta object from the result list and add to the meta property
     for (int i = 0; i < mappingResult.array.count; i++){
       NSObject* sample = [mappingResult.array objectAtIndex:i];
       if (sample && ![sample isKindOfClass:[MCMeta class]]){
         [_objects addObject:sample];
+        [newObjects addObject:sample];
       }else if ([sample isKindOfClass:[MCMeta class]]){
         self.meta = (MCMeta*)sample;
 //          NSLog(@"Infinite scroll found a new limit %@ and offset %@ and next page `%@`", self.meta.limit, self.meta.offset, self.meta.next);
@@ -235,7 +240,10 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
     
     isLoading = NO;
     
-
+    // notify the delegate
+    if (self.delegate && [self.delegate respondsToSelector:@selector(infiniteScrollDidLoad:withAppendedContents:)]){
+      [self.delegate infiniteScrollDidLoad:self withAppendedContents:newObjects];
+    }
    
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
     [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];

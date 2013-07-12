@@ -8,3 +8,4 @@
 
 #import "MCPaginationHelper.h"
 #import "MCPaginationRestKit.h"
+#import "MCInfiniteScrollDelegate.h"

@@ -151,7 +151,7 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
       __weak MCPaginationHelper* weakSelf = self;
       [scrollView addInfiniteScrollingWithActionHandler:^{
         __strong MCPaginationHelper* strongSelf = weakSelf;
-        [strongSelf loadMoreDataFromSelf];
+        [strongSelf loadMoreData];
       }];
       
     }else{
@@ -166,10 +166,6 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
 }
 
 -(void)loadMoreData{
-  [self loadMoreDataFromSelf];
-}
-
--(void)loadMoreDataFromSelf{
   // guard against multiple reloads
   if (isLoading)
     return;

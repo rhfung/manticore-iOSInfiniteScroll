@@ -150,7 +150,8 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
       scrollView.showsInfiniteScrolling = YES;
       __weak MCPaginationHelper* weakSelf = self;
       [scrollView addInfiniteScrollingWithActionHandler:^{
-        [weakSelf loadMoreDataFromSelf];
+        __strong MCPaginationHelper* strongSelf = weakSelf;
+        [strongSelf loadMoreDataFromSelf];
       }];
       
     }else{

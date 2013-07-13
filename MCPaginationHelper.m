@@ -10,7 +10,6 @@
 #import <AFNetworking-TastyPie/AFNetworking+ApiKeyAuthentication.h>
 #import <SVPullToRefresh/UIScrollView+SVInfiniteScrolling.h>
 #import <RestKit/RestKit.h>
-#import <Manticore-iOSViewFactory/ManticoreViewFactory.h>
 
 @interface MCPaginationHelper(Extension)
 

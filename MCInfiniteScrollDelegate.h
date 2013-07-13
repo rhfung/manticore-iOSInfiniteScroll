@@ -12,5 +12,6 @@
 
 @optional
 -(void)infiniteScrollDidLoad:(MCPaginationHelper*)scrollManager withAppendedContents:(NSArray*)appendedContents;
+-(void)infiniteScrollErrorLoading:(MCPaginationHelper*)scrollManager andError:(NSError*)error;
 
 @end

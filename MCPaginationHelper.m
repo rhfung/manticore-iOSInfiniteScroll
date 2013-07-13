@@ -246,7 +246,7 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
     }
    
   } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-    [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];
+//    [[MCViewModel sharedModel] setErrorTitle:@"Infinite Scroll" andDescription:error.localizedDescription];
     
     if (tableView && tableView.superview){
       tableView.showsInfiniteScrolling = NO;
@@ -254,6 +254,12 @@ void iosinfinitescroll_runOnMainQueueWithoutDeadlocking(void (^block)(void))
     }
 
     isLoading = NO;
+    
+    // notify the delegate
+    if (self.delegate && [self.delegate respondsToSelector:@selector(infiniteScrollErrorLoading:andError:)]){
+      [self.delegate infiniteScrollErrorLoading:self andError:error];
+    }
+
   }];
   
 }

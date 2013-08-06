@@ -8,7 +8,8 @@ Installation
 
 Install using CocoaPods to this repository. Include the following line in `Podfile`:
 
-    pod 'manticore-iOSInfiniteScroll', '~> 0.0.9', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
+    pod 'AFNetworking-TastyPie', :git => 'https://github.com/YetiHQ/AFNetworking-TastyPie'
+    pod 'manticore-iOSInfiniteScroll', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
 
 Usage
 -----
@@ -46,16 +47,16 @@ When RestKit returns back a single object, you can extract the single object usi
 When RestKit returns back an array of objects, you can bind a table to an array for infinite scroll. Infinite scroll is provided by [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh) CocoaPod.
 
     ... success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        MCPaginatorHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKit:mappingResult andTableView:yourTableView infiniteScroll:YES];
+        MCPaginatonHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKit:mappingResult andTableView:yourTableView infiniteScroll:YES];
 
         // ...
     }
 
 #### Data-Only Parsing
 
-`MCPaginatorHelper` can be used without a `UITableView`. A shorter function signature is used:
+`MCPaginatonHelper` can be used without a `UITableView`. A shorter function signature is used:
 
-    MCPaginatorHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKit:mappingResult];
+    MCPaginatonHelper* arr = [MCPaginationHelper helperWithUsername:[AppModel sharedModel].user.username apikey:[AppModel sharedModel].apikey urlPrefix:API_PREFIX restKit:mappingResult];
     // ...
     // invoke infinite scroll
     [arr loadMoreData];
@@ -70,16 +71,16 @@ A dummy mapping can be called too:
 
         [MCPaginationHelper helper]
 
-#### Copying MCPaginatorHelper
+#### Copying MCPaginatonHelper
 
 You can reuse MCPaginationHelper for other table views. Here's how you would do that:
     
         MCPaginationHelper* otherData = [MCPaginationHelper ...];
         MCPaginationHelper* newData = [MCPaginationHelper helperWithPaginator:otherData andTableView:tableView infiniteScroll:YES];
 
-### Using MCPaginatorHelper
+### Using MCPaginatonHelper
 
-`MCPaginatorHelper` objects provide two properties, which match exactly with TastyPie:
+`MCPaginatonHelper` objects provide two properties, which match exactly with TastyPie:
 
 * `objects`: Objects returned and mapped by RestKit. Manticore Communication (manticom) is the preferred way to create these other mappings, or write RestKit mapping by hand.
 * `meta`: Pagination information provided by TastyPie. `next` is the URL of the next page's resources. `total_count` refers to the total number of available objects and can be used to stop infinite scroll.
@@ -91,7 +92,7 @@ Revisions
 
 0.0.8 - continued fixing of crashes from 0.0.6
 
-0.0.7 - `loadMoreData:(UITableView*)` has been removed from the API. `loadMoreData` will automatically load from the tableView that was used to construct `MCPaginatorHelper`. Addresses the bug reported in build 0.0.6.
+0.0.7 - `loadMoreData:(UITableView*)` has been removed from the API. `loadMoreData` will automatically load from the tableView that was used to construct `MCPaginatonHelper`. Addresses the bug reported in build 0.0.6.
 
 0.0.6 - possible bug fix to a crash that happens when UITableView gets deallocated on infinite scroll. A local copy of UITableView is saved, and UI updates are made synchronously in the block.
 

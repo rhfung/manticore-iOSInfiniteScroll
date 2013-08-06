@@ -8,7 +8,8 @@ Installation
 
 Install using CocoaPods to this repository. Include the following line in `Podfile`:
 
-    pod 'manticore-iOSInfiniteScroll', '~> 0.0.9', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
+    pod 'AFNetworking-TastyPie', :git => 'https://github.com/YetiHQ/AFNetworking-TastyPie'
+    pod 'manticore-iOSInfiniteScroll', :git => 'https://github.com/rhfung/manticore-iOSInfiniteScroll.git'
 
 Usage
 -----
